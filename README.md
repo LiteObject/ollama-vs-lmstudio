@@ -11,3 +11,8 @@ Ollama and LM Studio are both chatbot development platforms, but they have some 
 
 In summary, Ollama is designed to be more user-friendly and accessible, while LM Studio offers more advanced features and customization options. The choice between the two platforms will depend on your specific needs and technical expertise.
 
+## Links:
+![ollama](https://ollama.com/public/ollama.png)
+Get up and running with large language models, locally.
+- [https://ollama.com/](https://ollama.com/)
+
