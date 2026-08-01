@@ -1,27 +1,26 @@
 ---
-title: "Advanced Ollama Features and Configuration Guide 2025"
+title: "Advanced Ollama Features and Configuration Guide 2026"
 description: "Learn advanced Ollama features including custom Modelfiles, API integration, GPU optimization, Docker deployment, and production configuration."
 keywords: "Ollama advanced features, Ollama API, Ollama Docker, Ollama GPU optimization, Ollama Modelfiles, Ollama production setup"
 ---
 
-# Advanced Ollama Features and Configuration Guide 2025
+# Advanced Ollama Features and Configuration Guide 2026
 
 *Okay, so you've got the basics down and want to see what else Ollama can do. Here's the fun stuff.*
 
 Learn advanced Ollama features including custom Modelfiles, API integration, GPU optimization, Docker deployment, and production configuration for local AI models.
+
+> Everything here is checked against the [official Ollama docs](https://docs.ollama.com/). If a flag or variable ever looks wrong, `ollama serve --help` is the source of truth for server settings.
 
 ## Creating custom models with Modelfiles
 
 Think of Modelfiles like recipes - you take an existing model and customize how it behaves:
 
 ```dockerfile
-FROM llama3.3:8b
-SYSTEM "You are a Python coding expert who explains things clearly."
-TEMPLATE """{{ .System }}
-User: {{ .Prompt }}
-Assistant: """
+FROM qwen3.5:9b
+SYSTEM """You are a Python coding expert who explains things clearly."""
 PARAMETER temperature 0.1
-PARAMETER stop "User:"
+PARAMETER num_ctx 8192
 ```
 
 ```bash
@@ -31,39 +30,42 @@ ollama run python-expert
 
 Now you've got a model that's specifically tuned to help with Python and gives more focused, less random responses.
 
+You usually **don't** need a `TEMPLATE` line - Ollama inherits the base model's chat template, and getting it wrong is the fastest way to break a model. Only override it if you know exactly what the model expects.
+
 ## Running multiple models at once
 
-This is actually pretty useful - you can have different models for different tasks:
+The Ollama server handles this for you - there's no need to background a process per model. If a model fits in available memory, it gets loaded alongside the others:
 
 ```bash
 # See what models you have
 ollama list
 
-# Start the Ollama server in the background
-ollama serve &  
+# See what's actually loaded right now, and where
+ollama ps
 
-# Now you can run multiple models
-ollama run llama3.3:8b &
-ollama run qwen2.5-coder:7b &
-ollama run deepseek-r1:7b &
+# Free memory when you're done with one
+ollama stop qwen3.5:9b
 ```
+
+By default Ollama will keep up to 3 models loaded (`OLLAMA_MAX_LOADED_MODELS`), unloading idle ones when it needs room. Just hit the API with a different `model` value and the right one gets loaded.
 
 ### Switching between models via API
 ```python
 import requests
 
 def ask_model(model, question):
-    response = requests.post('http://localhost:11434/api/generate', 
-        json={'model': model, 'prompt': question})
-    return response.json()
+    response = requests.post('http://localhost:11434/api/generate',
+        json={'model': model, 'prompt': question, 'stream': False})
+    response.raise_for_status()
+    return response.json()['response']
 
 # Use different models for different things
-code_answer = ask_model('qwen2.5-coder:7b', 'Write a Python function to sort a list')
-general_answer = ask_model('llama3.3:8b', 'Explain quantum computing simply')
-reasoning_answer = ask_model('deepseek-r1:7b', 'Solve this complex logic puzzle: ...')
+code_answer = ask_model('qwen3-coder:30b', 'Write a Python function to sort a list')
+general_answer = ask_model('qwen3.5:9b', 'Explain quantum computing simply')
+reasoning_answer = ask_model('gpt-oss:20b', 'Solve this complex logic puzzle: ...')
 ```
 
-Pretty neat - you can have a coding specialist and a general knowledge model running side by side.
+Pretty neat - you can have a coding specialist and a general knowledge model available side by side.
 
 ## GPU optimization (making things faster)
 
@@ -72,16 +74,32 @@ Ollama is pretty smart about using your GPU automatically, but you can tweak thi
 ### Automatic GPU detection
 Ollama automatically finds and uses your GPU (NVIDIA, AMD, or Apple's chips). Usually it just works.
 
-### Manual GPU tweaking
+### Manual tweaking
 ```bash
-# Control how much of the model runs on GPU (higher = faster but uses more VRAM)
-OLLAMA_NUM_GPU_LAYERS=35 ollama run llama3.1:8b
+# Pick a specific GPU when you have several
+CUDA_VISIBLE_DEVICES=0 ollama serve      # NVIDIA
+ROCR_VISIBLE_DEVICES=0 ollama serve      # AMD
 
-# Limit how much GPU memory to use (helpful if you're also gaming)
-OLLAMA_GPU_MEMORY_FRACTION=0.8 ollama serve
+# Cut memory use as context grows (on by default where supported)
+OLLAMA_FLASH_ATTENTION=1 ollama serve
 
-# Use a specific GPU if you have multiple
-CUDA_VISIBLE_DEVICES=0 ollama run llama3.1:8b
+# Shrink the K/V cache: f16 (default), q8_0, or q4_0
+OLLAMA_KV_CACHE_TYPE=q8_0 ollama serve
+
+# Change the default context window (default is 4096 tokens)
+OLLAMA_CONTEXT_LENGTH=8192 ollama serve
+```
+
+To control how many layers land on the GPU, use the `num_gpu` **model parameter** rather than an environment variable:
+
+```bash
+# Inside an interactive session
+/set parameter num_gpu 35
+```
+
+```json
+// Or per-request via the API
+{ "model": "qwen3.5:9b", "prompt": "hi", "options": { "num_gpu": 35 } }
 ```
 
 ### Check what's happening
@@ -90,33 +108,36 @@ CUDA_VISIBLE_DEVICES=0 ollama run llama3.1:8b
 nvidia-smi
 
 # See what Ollama is doing
-ollama ps  # Shows running models and resource usage
+ollama ps  # Shows loaded models and whether they're on GPU or CPU
 ```
+
+The `PROCESSOR` column in `ollama ps` is the number that matters: `100% GPU` is what you want, `100% CPU` means the model didn't fit.
 
 **Reality check:** The defaults usually work fine. Only mess with this if you're having performance issues.
 
 ## Model quantization levels (quality vs size trade-offs)
 
-Different compression levels of the same model - think video quality settings:
+Different compression levels of the same model - think video quality settings. Check the model's tag list on [ollama.com/library](https://ollama.com/library) for what's actually published:
 
 ```bash
-# Different quality levels for the same model
-ollama pull llama3.1:8b-q2_K     # Smallest file, lowest quality
-ollama pull llama3.1:8b-q4_K_M   # Good balance (recommended)
-ollama pull llama3.1:8b-q6_K     # Larger file, high quality
-ollama pull llama3.1:8b-q8_0     # Huge file, near-perfect quality
+# Different quality levels of the same model
+ollama pull gemma4:12b-it-qat     # Quantization-aware trained - best quality per GB
+ollama pull gemma4:12b-it-q4_K_M  # Good balance (this is what the plain tag gives you)
+ollama pull gemma4:12b-it-q8_0    # Larger file, higher quality
+ollama pull gemma4:12b-it-bf16    # Essentially uncompressed, very large
 ```
+
+On Apple Silicon, look for `-mlx` tags. On recent NVIDIA hardware, `-nvfp4` and `-mxfp8` are worth a try.
 
 ### Custom quantization in Modelfiles
 ```dockerfile
-# Modelfile with specific settings
-FROM llama3.1:8b-q4_K_M
+# Modelfile pinned to a specific quantization
+FROM gemma4:12b-it-q4_K_M
 SYSTEM "You are a helpful assistant."
-PARAMETER num_ctx 4096  # How much context to remember
-PARAMETER num_gpu 35    # How many layers to put on GPU
+PARAMETER num_ctx 8192  # How much context to remember
 ```
 
-**Practical advice:** q4_K_M is the sweet spot for most people. Only go higher if you have tons of RAM and want max quality.
+**Practical advice:** q4_K_M is the sweet spot for most people, and a `qat` build is better still when one exists. Only go higher if you have tons of RAM and want max quality.
 
 ## API integration for developers
 
@@ -133,7 +154,7 @@ import requests
 # Ask the AI a question
 response = requests.post('http://localhost:11434/api/generate',
     json={
-        'model': 'llama3.2:3b',
+        'model': 'qwen3.5:4b',
         'prompt': 'Tell me a joke about computers',
         'stream': False
     })
@@ -145,32 +166,46 @@ print(response.json()['response'])
 **More advanced version for developers:**
 
 ```python
-# Simple chat completion
-import requests
-import json
+# Chat completion using the official client
+from ollama import chat
 
-def chat_with_ollama(model, messages):
-    response = requests.post('http://localhost:11434/api/chat',
-        json={
-            'model': model,
-            'messages': messages,
-            'stream': False
-        })
-    return response.json()['message']['content']
-
-# Example usage
-messages = [{'role': 'user', 'content': 'Hello there!'}]
-response = chat_with_ollama('llama3.1:8b', messages)
-print(response)
+response = chat(
+    model='qwen3.5:9b',
+    messages=[{'role': 'user', 'content': 'Hello there!'}],
+)
+print(response.message.content)
 ```
+
+```bash
+pip install ollama    # Python
+npm install ollama    # JavaScript / TypeScript
+```
+
+### OpenAI-compatible endpoint
+
+If you already have code written against the OpenAI SDK, you barely have to change anything:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')  # key is ignored
+
+response = client.chat.completions.create(
+    model='qwen3.5:9b',
+    messages=[{'role': 'user', 'content': 'Hello there!'}],
+)
+print(response.choices[0].message.content)
+```
+
+This is the easiest way to point an existing tool at your local models.
 
 ### LangChain integration (for RAG and complex workflows)
 ```python
-from langchain_community.llms import Ollama
+from langchain_ollama import ChatOllama
 from langchain.chains import RetrievalQA
 
 # Connect Ollama to LangChain
-llm = Ollama(model="llama3.1:8b")
+llm = ChatOllama(model="qwen3.5:9b")
 
 # Create a retrieval-augmented generation (RAG) pipeline
 qa_chain = RetrievalQA.from_chain_type(
@@ -179,70 +214,111 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 ```
 
+(The old `langchain_community.llms.Ollama` class is deprecated - use the `langchain-ollama` package.)
+
 ### Running in Docker
-```dockerfile
-# Dockerfile for Ollama in a container
-FROM ollama/ollama:latest
-RUN ollama pull llama3.1:8b
-EXPOSE 11434
-CMD ["ollama", "serve"]
+```bash
+# Start the server with a persistent volume for models
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+# Pull a model into the running container
+docker exec -it ollama ollama pull qwen3.5:9b
+
+# On Linux/WSL2 with an NVIDIA GPU, add --gpus=all (needs nvidia-container-toolkit)
+docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 ```
+
+Don't try to `RUN ollama pull` inside a Dockerfile - the pull needs a running server, so it has to happen at runtime.
+
+### Plugging into your editor
+
+```bash
+ollama launch            # pick an integration interactively
+ollama launch claude --model qwen3-coder:30b
+```
+
+This configures supported coding tools (VS Code, Claude Code, Codex, OpenCode, Droid) to talk to your local models.
 
 This stuff gets pretty technical, but it's powerful once you get the hang of it.
 
 ## Fine-tuning behavior with parameters
 
-You can adjust how models respond by tweaking runtime parameters:
+There are no `--temperature` style flags on `ollama run`. You change sampling either inside the session, in a Modelfile, or per API request:
 
 ```bash
-# Make responses more creative/random
-ollama run llama3.1:8b --temperature 0.9 --top-p 0.9 
-
-# Make responses more focused/deterministic
-ollama run llama3.1:8b --temperature 0.1 --repeat-penalty 1.2
+# Inside an interactive session
+>>> /set parameter temperature 0.9
+>>> /set parameter top_p 0.9
+>>> /set parameter num_ctx 8192
+>>> /show parameters
 ```
 
+```python
+# Or per request through the API
+requests.post('http://localhost:11434/api/chat', json={
+    'model': 'qwen3.5:9b',
+    'messages': [{'role': 'user', 'content': 'Write me a limerick'}],
+    'options': {'temperature': 0.9, 'top_p': 0.9, 'repeat_penalty': 1.1},
+    'stream': False,
+})
+```
+
+Lower temperature (0.1-0.3) for focused, factual work. Higher (0.8-1.0) for creative writing.
+
 ### Environment variables for server configuration
+
+These configure the **server**, so set them before `ollama serve` (or in your systemd unit / Windows env vars - see the [Ollama FAQ](https://docs.ollama.com/faq)):
+
 ```bash
 # Make Ollama accessible from other computers on your network
 export OLLAMA_HOST=0.0.0.0:11434      
 
-# Allow requests from web apps
-export OLLAMA_ORIGINS="*"              
+# Allow requests from specific web origins
+export OLLAMA_ORIGINS="https://myapp.com"
 
 # Store models somewhere else
 export OLLAMA_MODELS="/custom/path"    
 
-# Handle more simultaneous requests
+# Handle more simultaneous requests per model (default 1)
 export OLLAMA_NUM_PARALLEL=4           
 
-# Keep more models loaded in memory
+# Keep more models loaded in memory (default 3)
 export OLLAMA_MAX_LOADED_MODELS=3      
+
+# How long an idle model stays loaded (default 5m)
+export OLLAMA_KEEP_ALIVE=30m
+
+# Default context window in tokens (default 4096)
+export OLLAMA_CONTEXT_LENGTH=8192
+
+# Queue depth before the server returns 503 (default 512)
+export OLLAMA_MAX_QUEUE=512
+
+# Turn off cloud models and web search entirely
+export OLLAMA_NO_CLOUD=1
 ```
+
+Note that `OLLAMA_NUM_PARALLEL` multiplies memory use: required RAM scales with `OLLAMA_NUM_PARALLEL` × `OLLAMA_CONTEXT_LENGTH`.
 
 ### Advanced Modelfile example
 
-**Note:** This looks scary but it's just telling the model how to format conversations. You can usually ignore this and use the defaults unless you want to get fancy.
+**Note:** Most of the time you only need `FROM`, `SYSTEM`, and a couple of `PARAMETER` lines. Everything else is optional.
 
 ```dockerfile
-# More sophisticated model customization
-FROM llama3.1:8b
+FROM qwen3.5:9b
 
-TEMPLATE """
-{{ if .System }}<|start_header_id|>system<|end_header_id|>
+SYSTEM """You are a helpful AI assistant with a sense of humor."""
 
-{{ .System }}<|eot_id|>{{ end }}{{ if .Prompt }}<|start_header_id|>user<|end_header_id|>
-
-{{ .Prompt }}<|eot_id|>{{ end }}<|start_header_id|>assistant<|end_header_id|>
-
-"""
-
-SYSTEM "You are a helpful AI assistant with a sense of humor."
-PARAMETER stop "<|eot_id|>"
 PARAMETER temperature 0.7
-```
+PARAMETER num_ctx 8192
 
-**Translation:** This is just setting up how the AI formats its responses. The weird symbols are like formatting codes - you don't need to understand them.
+# Seed the model with example turns so it copies the style
+MESSAGE user What's the deal with airline food?
+MESSAGE assistant Honestly? It's the only meal where the altitude is higher than the expectations.
+
+# Refuse to load on an Ollama version that's too old for this file
+REQUIRES 0.14.0
+```
 
 **Honestly:** The defaults work fine for most people. Only mess with this stuff if you have specific needs.
 
@@ -265,7 +341,7 @@ ollama rm my-assistant:v1
 ### Backup and sharing
 ```bash
 # Export a model's configuration for backup
-ollama show my-assistant --modelfile > my-assistant.Modelfile
+ollama show --modelfile my-assistant > my-assistant.Modelfile
 
 # Import on another computer
 ollama create my-assistant -f ./my-assistant.Modelfile
@@ -274,30 +350,35 @@ ollama create my-assistant -f ./my-assistant.Modelfile
 ollama cp source-model target-model
 ```
 
-This is handy when you've spent time tweaking a model and want to save that configuration.
+This is handy when you've spent time tweaking a model and want to save that configuration. Note that the exported Modelfile references a local blob path, so edit the `FROM` line back to the original model name before using it elsewhere.
 
 ## Production deployment (if you're building something serious)
 
 ### Load balancing with Docker Compose
 ```yaml
 # docker-compose.yml for running multiple Ollama instances
-version: '3.8'
 services:
   ollama-1:
     image: ollama/ollama
     ports: ["11434:11434"]
-    volumes: ["./models:/root/.ollama"]
+    volumes: ["ollama-1:/root/.ollama"]
   
   ollama-2:
     image: ollama/ollama
     ports: ["11435:11434"]
-    volumes: ["./models:/root/.ollama"]
+    volumes: ["ollama-2:/root/.ollama"]
   
   nginx:
     image: nginx
     ports: ["80:80"]
-    volumes: ["./nginx.conf:/etc/nginx/nginx.conf"]
+    volumes: ["./nginx.conf:/etc/nginx/nginx.conf:ro"]
+
+volumes:
+  ollama-1:
+  ollama-2:
 ```
+
+Give each instance its own volume - two servers writing to one model directory will fight over it.
 
 ### Monitoring and logging
 ```bash
@@ -313,25 +394,37 @@ curl http://localhost:11434/api/tags
 ```
 
 ### Security for production
+
+**Ollama has no built-in authentication.** Anything that can reach port 11434 can run models, pull new ones, and delete yours. Treat it like an unauthenticated internal service.
+
 ```bash
-# Restrict access to localhost only
+# Default and safest: listen on localhost only
 export OLLAMA_HOST=127.0.0.1:11434  
 
-# Only allow specific websites to connect
+# Only allow specific web origins (avoid "*" on a shared network)
 export OLLAMA_ORIGINS="https://myapp.com"  
-
-# Use a reverse proxy (nginx, Traefik, etc.) with authentication
 ```
+
+If it needs to be reachable by anything else:
+- Put a reverse proxy (nginx, Caddy, Traefik) in front of it and terminate TLS there
+- Add authentication at the proxy - API keys, mTLS, or SSO
+- Restrict source addresses with a firewall or security group
+- Never expose port 11434 directly to the internet
 
 ## Performance optimization tricks
 
 ### Memory management
+
+Ollama sizes things automatically based on available VRAM and system RAM. The knobs that actually exist:
+
 ```bash
-# Control memory usage
-export OLLAMA_MAX_VRAM=8GB           # Don't use all your graphics memory
-export OLLAMA_SWAP_SIZE=4GB          # Use system RAM for large models
-export OLLAMA_NUM_THREAD=8           # CPU threads for processing
+export OLLAMA_KV_CACHE_TYPE=q8_0   # Roughly halves K/V cache memory
+export OLLAMA_FLASH_ATTENTION=1    # Lower memory growth at long context
+export OLLAMA_CONTEXT_LENGTH=4096  # Smaller context = less memory
+export OLLAMA_MAX_LOADED_MODELS=1  # Don't hold several models at once
 ```
+
+If a model won't fit, the real fixes are a smaller model, a smaller quantization, or a shorter context - not a magic variable.
 
 ### Batch processing for efficiency
 ```python
@@ -339,17 +432,17 @@ export OLLAMA_NUM_THREAD=8           # CPU threads for processing
 import asyncio
 import aiohttp
 
-async def process_multiple_prompts(prompts, model="llama3.1:8b"):
+async def process_multiple_prompts(prompts, model="qwen3.5:9b"):
     async with aiohttp.ClientSession() as session:
-        tasks = []
-        for prompt in prompts:
-            task = session.post('http://localhost:11434/api/generate',
-                json={'model': model, 'prompt': prompt})
-            tasks.append(task)
-        
-        responses = await asyncio.gather(*tasks)
-        return [await r.json() for r in responses]
+        async def one(prompt):
+            async with session.post('http://localhost:11434/api/generate',
+                    json={'model': model, 'prompt': prompt, 'stream': False}) as r:
+                return await r.json()
+
+        return await asyncio.gather(*(one(p) for p in prompts))
 ```
+
+Set `OLLAMA_NUM_PARALLEL` above 1 or these will just queue up one at a time.
 
 ### Smart caching
 ```bash
@@ -359,9 +452,11 @@ export OLLAMA_KEEP_ALIVE=24h
 # Cache multiple models in memory
 export OLLAMA_MAX_LOADED_MODELS=5    
 
-# Preload models you use frequently
-ollama run llama3.1:8b "" --keep-alive 24h
+# Preload a model you use frequently
+ollama run qwen3.5:9b ""
 ```
+
+You can also set `keep_alive` per request - `-1` pins a model in memory, `0` unloads it as soon as it responds.
 
 ## Some practical advice from experience
 
@@ -376,7 +471,9 @@ ollama run llama3.1:8b "" --keep-alive 24h
 - [ ] Set appropriate resource limits
 - [ ] Configure monitoring and alerting
 - [ ] Set up health checks
-- [ ] Implement proper security (don't expose to the internet without authentication)
+- [ ] Implement proper security (Ollama has no auth of its own - put a proxy in front of it)
+- [ ] Keep `OLLAMA_HOST` bound to localhost unless you deliberately need otherwise
+- [ ] Decide whether cloud models are acceptable, and set `OLLAMA_NO_CLOUD=1` if not
 - [ ] Plan for model updates and rollbacks
 - [ ] Document your API usage and parameters
 

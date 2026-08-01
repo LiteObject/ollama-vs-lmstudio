@@ -1,12 +1,12 @@
 ---
-title: "How to Run AI Models Locally - Free ChatGPT Alternative 2025"
-description: "Learn to install and run AI models like Llama, Qwen, and Phi3 on your computer for free. Step-by-step guide to local AI with LM Studio and Ollama."
-keywords: "local AI, run AI models locally, free ChatGPT alternative, Ollama, LM Studio, Llama, Qwen, local AI installation"
+title: "How to Run AI Models Locally - Free ChatGPT Alternative 2026"
+description: "Learn to install and run AI models like Qwen 3.5, Gemma 4, and gpt-oss on your computer for free. Step-by-step guide to local AI with LM Studio and Ollama."
+keywords: "local AI, run AI models locally, free ChatGPT alternative, Ollama, LM Studio, Qwen 3.5, Gemma 4, gpt-oss, local AI installation"
 ---
 
 # How to Run AI Models Locally on Your Computer - Free ChatGPT Alternative
 
-Tired of paying $20/month for ChatGPT? Yeah, me too. Here's how to run these AI models on your own machine - completely free and private. Learn to install and use local AI models like Llama, Qwen, and Phi3 with step-by-step instructions.
+Tired of paying a monthly subscription for a chatbot? Yeah, me too. Here's how to run these AI models on your own machine - completely free and private. Learn to install and use local AI models like Qwen 3.5, Gemma 4, and gpt-oss with step-by-step instructions.
 
 ## Benefits of Running AI Models Locally vs Cloud Services
 
@@ -19,8 +19,10 @@ Look, I was skeptical at first. But after using local AI for months, I'm never g
 
 ## Step 1: Choose the Best Local AI Software (LM Studio vs Ollama)
 
+Both tools now ship a desktop app *and* a command line, so the old "GUI vs terminal" split isn't as sharp as it used to be. Pick either one - you can't really go wrong.
+
 ### If you hate command lines
-**[LM Studio](https://lmstudio.ai/)** - This one's got a nice interface
+**[LM Studio](https://lmstudio.ai/)** - This one's got the nicest interface
 1. Download it and install (pretty straightforward)
 2. Browse models in the app - they've got tons
 3. Hit download, wait a bit, then start chatting
@@ -31,13 +33,15 @@ Look, I was skeptical at first. But after using local AI for months, I'm never g
 # Mac/Linux folks:
 curl -fsSL https://ollama.com/install.sh | sh
 
-# Windows people: Just download from the website
+# Windows people: Just download the installer from the website
 
 # Then try this:
-ollama run llama3.2:3b
+ollama run qwen3.5:4b
 ```
 
-Honestly, I'd recommend starting with LM Studio if you're new to this stuff. You can always try Ollama later.
+Ollama also has a desktop app for Windows, macOS, and Linux now, so you get a chat window out of the box - the terminal is optional.
+
+**Heads up on cloud models:** Ollama's library includes "cloud" tagged models that run on Ollama's servers, not your machine. Handy, but they aren't private and they aren't local. Stick to regular tags if privacy is the point. You can turn the feature off entirely with `OLLAMA_NO_CLOUD=1`.
 
 ## Step 2: Check Your Computer Hardware Requirements for AI Models
 
@@ -45,9 +49,12 @@ This is important - you can't run huge models on a potato computer. But don't wo
 
 | What you've got | What you can run | How good is it? |
 |-----------------|------------------|-----------------|
-| Basic laptop (8GB RAM) | 3B-7B models | Pretty decent for most stuff |
-| Gaming rig (good GPU) | 13B models | Really good, honestly |
-| Beast machine (16GB+ GPU) | 30B+ models | Scary good |
+| Basic laptop (8GB RAM) | 1B-4B models | Pretty decent for most stuff |
+| Solid laptop/desktop (16GB RAM) | 8B-14B models | Genuinely useful |
+| Gaming rig (12-16GB VRAM) | 24B-32B models, or MoE models | Really good, honestly |
+| Beast machine (32GB+ VRAM or 64GB+ unified) | 70B+ and large MoE models | Scary good |
+
+Rule of thumb: **the download size is roughly how much memory the model needs**, plus a couple of GB for context. A 6.6GB model on an 8GB machine will technically load and then crawl.
 
 **Not sure what you have?** 
 - Windows: Right-click "This PC" → Properties
@@ -56,17 +63,17 @@ This is important - you can't run huge models on a potato computer. But don't wo
 
 ## Step 3: Download and Install Your First AI Model
 
-**TL;DR:** Start with llama3.2:3b - it's like the Honda Civic of AI models: reliable, efficient, and works for most people.
+**TL;DR:** Start with qwen3.5:4b - it's like the Honda Civic of AI models: reliable, efficient, and works for most people.
 
 I've tried a bunch of these local AI models. Here are the best free ChatGPT alternatives that actually work well:
 
-- **llama3.2:3b** - Start here. It's fast, works on anything, and surprisingly good for a local AI model
-- **phi3.5:3.8b** - Microsoft's free AI model. Also pretty solid for everyday tasks
-- **qwen2.5:7b** - Great multilingual AI model if you need multiple languages
-- **qwen2.5-coder:7b** - Best free coding AI I've found for programming help
-- **smollm2:1.7b** - New lightweight local AI option that's surprisingly capable
+- **qwen3.5:4b** (~3.4GB) - Start here. Fast, runs on almost anything, handles text and images, and it's current
+- **gemma3:4b** (~3.3GB) - Google's small model. Rock solid for everyday tasks
+- **granite4.1:3b** - IBM's small model, good at following instructions and calling tools
+- **qwen3.5:9b** (~6.6GB) - Noticeably smarter if you've got 16GB of RAM to spare
+- **qwen3.5:2b** (~2.7GB) - When your machine is really tight on memory
 
-Honestly, just start with `llama3.2:3b`. You can always download more later (and trust me, you will).
+Honestly, just start with `qwen3.5:4b`. You can always download more later (and trust me, you will).
 
 **📋 [Detailed model breakdown →](MODEL_GUIDE.md)**
 **🆕 [What I'm using right now →](CURRENT_MODEL_RECOMMENDATIONS.md)**
@@ -74,25 +81,36 @@ Honestly, just start with `llama3.2:3b`. You can always download more later (and
 ## Step 4: How to Start Using Local AI Models
 
 ### If you went with LM Studio
-1. Download a model from the search tab (I'd suggest llama3.2:3b)
+1. Download a model from the search tab (I'd suggest Qwen3.5 4B)
 2. Switch to the chat tab
 3. Pick your model from the dropdown and start typing
 
 ### If you went with Ollama
 ```bash
-ollama run llama3.2:3b
+ollama run qwen3.5:4b
 >>> Hey there! What can I help you with?
+```
+
+A few commands worth knowing:
+
+```bash
+ollama list          # what you've downloaded
+ollama ps            # what's loaded in memory right now
+ollama stop <model>  # free up the memory
+ollama rm <model>    # delete a model you're done with
 ```
 
 That's it. You're now running AI on your own machine. Pretty cool, right?
 
 ## Troubleshooting Common Local AI Installation Issues
 
-**🐌 Model running like molasses?** Try something smaller like `phi3:mini` or `smollm2:1.7b`
+**🐌 Model running like molasses?** Try something smaller like `qwen3.5:2b` or `gemma3:1b`. Run `ollama ps` - if the `PROCESSOR` column says `100% CPU`, the model didn't fit in your GPU and that's your answer.
 
-**💾 Computer says "out of memory"?** Your machine needs more RAM, or switch to a smaller model (try going from 7B to 3B)
+**💾 Computer says "out of memory"?** Your machine needs more RAM, or switch to a smaller model (try going from 9B to 4B). Shrinking the context window helps too: `/set parameter num_ctx 4096` inside `ollama run`.
 
-**❌ Installation failing?** Restart your computer and check if your antivirus is being overly paranoid - sometimes it blocks AI software
+**🤔 Model "thinks" forever before answering?** You grabbed a reasoning model. That's normal behavior for them - pick a non-thinking model if you just want quick answers.
+
+**❌ Installation failing?** Restart your computer and check if your antivirus is being overly paranoid - sometimes it blocks AI software.
 
 ## Additional Local AI Resources and Guides
 
@@ -107,4 +125,5 @@ That's it. You're now running AI on your own machine. Pretty cool, right?
 
 - 90% of problems are solved by trying a smaller model first
 - Check if your antivirus is blocking stuff
+- Don't expose Ollama's port (11434) to the internet - it has no authentication of its own
 - When in doubt, restart and try again
