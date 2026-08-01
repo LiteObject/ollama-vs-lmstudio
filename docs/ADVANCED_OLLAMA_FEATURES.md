@@ -43,24 +43,13 @@ ollama list
 # See what's actually loaded right now, and where
 ollama ps
 
-<<<<<<< HEAD:ADVANCED_OLLAMA_FEATURES.md
 # Free memory when you're done with one
 ollama stop qwen3.5:9b
 ```
 
 By default Ollama will keep up to 3 models loaded (`OLLAMA_MAX_LOADED_MODELS`), unloading idle ones when it needs room. Just hit the API with a different `model` value and the right one gets loaded.
-=======
-# Now you can run multiple models
-ollama run llama3.3:8b &
-ollama run qwen2.5-coder:7b &
-ollama run deepseek-r1:7b &
 
-# Check running models
-ollama ps
-```
-
-In Unix-like systems (e.g., Linux, macOS), the `&` symbol at the end of a command (e.g., `ollama serve &` or `ollama run llama3:8b &`) tells the shell to run the command in the background. This means the command executes without blocking the terminal, allowing you to continue using the same terminal session for other commands.
->>>>>>> eb2a905b6a76076b531ea71061c0b02f22dbb848:docs/ADVANCED_OLLAMA_FEATURES.md
+*Side note:* on Linux and macOS, a trailing `&` (as in `ollama serve &`) runs a command in the background so it doesn't block your terminal. That's useful for the server itself, but don't background a bunch of `ollama run` commands to "load" several models - `ollama run` is an interactive chat session, not a way to preload.
 
 ### Switching between models via API
 ```python

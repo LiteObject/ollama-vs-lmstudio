@@ -6,13 +6,9 @@ keywords: "local AI, run AI models locally, free ChatGPT alternative, Ollama, LM
 
 # How to Run AI Models Locally on Your Computer - Free ChatGPT Alternative
 
-<<<<<<< HEAD
 Tired of paying a monthly subscription for a chatbot? Yeah, me too. Here's how to run these AI models on your own machine - completely free and private. Learn to install and use local AI models like Qwen 3.5, Gemma 4, and gpt-oss with step-by-step instructions.
-=======
-Tired of paying $ every month for ChatGPT? Here's how to run these AI models on your own machine - completely free and private. Learn to install and use local AI models like Llama, Qwen, and Phi3 with step-by-step instructions.
 
 📚 **Complete documentation available in the [docs folder](./docs/)**
->>>>>>> eb2a905b6a76076b531ea71061c0b02f22dbb848
 
 ## Benefits of Running AI Models Locally vs Cloud Services
 
@@ -45,13 +41,9 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama run qwen3.5:4b
 ```
 
-<<<<<<< HEAD
 Ollama also has a desktop app for Windows, macOS, and Linux now, so you get a chat window out of the box - the terminal is optional.
 
 **Heads up on cloud models:** Ollama's library includes "cloud" tagged models that run on Ollama's servers, not your machine. Handy, but they aren't private and they aren't local. Stick to regular tags if privacy is the point. You can turn the feature off entirely with `OLLAMA_NO_CLOUD=1`.
-=======
-I'd recommend starting with LM Studio if you're new to this stuff. You can always try Ollama later.
->>>>>>> eb2a905b6a76076b531ea71061c0b02f22dbb848
 
 ## Step 2: Check Your Computer Hardware Requirements for AI Models
 
@@ -77,25 +69,14 @@ Rule of thumb: **the download size is roughly how much memory the model needs**,
 
 I've tried a bunch of these local AI models. Here are the best free ChatGPT alternatives that actually work well:
 
-<<<<<<< HEAD
 - **qwen3.5:4b** (~3.4GB) - Start here. Fast, runs on almost anything, handles text and images, and it's current
 - **gemma3:4b** (~3.3GB) - Google's small model. Rock solid for everyday tasks
 - **granite4.1:3b** - IBM's small model, good at following instructions and calling tools
 - **qwen3.5:9b** (~6.6GB) - Noticeably smarter if you've got 16GB of RAM to spare
 - **qwen3.5:2b** (~2.7GB) - When your machine is really tight on memory
+- **gpt-oss:20b** - OpenAI's open-weight model, if you've got the hardware for it
 
 Honestly, just start with `qwen3.5:4b`. You can always download more later (and trust me, you will).
-=======
-- **llama3.2:3b** - Start here. It's fast, works on anything, and surprisingly good for a local AI model
-- **gpt-oss** - OpenAI's new open models with incredible reasoning - genuinely impressive
-- **qwen3:1.7b** - Alibaba's new lightweight model that's impressively capable 
-- **phi-4:14b** - Microsoft's new reasoning powerhouse (if you have the hardware)
-- **stable-code:3b** - New coding specialist that rivals much larger models
-- **deepcoder:14b** - Latest open-source coding champion at o3-mini level
-- **smollm2:1.7b** - Lightweight local AI option that's surprisingly capable
-
-Just start with `llama3.2:3b` or try `gpt-oss` if you want the latest and greatest. You can always download more later (and trust me, you will).
->>>>>>> eb2a905b6a76076b531ea71061c0b02f22dbb848
 
 **📋 [Detailed model breakdown →](docs/MODEL_GUIDE.md)**
 **🆕 [What I'm using right now →](docs/CURRENT_MODEL_RECOMMENDATIONS.md)**
