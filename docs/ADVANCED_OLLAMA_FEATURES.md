@@ -477,19 +477,22 @@ You can also set `keep_alive` per request - `-1` pins a model in memory, `0` unl
 - [ ] Keep `OLLAMA_HOST` bound to localhost unless you deliberately need otherwise
 - [ ] Decide whether cloud models are acceptable, and set `OLLAMA_NO_CLOUD=1` if not
 - [ ] Plan for model updates and rollbacks
+- [ ] Document your API usage and parameters
 
 ## Working with vision models (text + images)
 
 ### Getting started with vision models
-The newest models can understand both text and images. This is genuinely useful:
+Most current models understand both text and images. This is genuinely useful:
 
 ```bash
 # Download a vision model
-ollama pull llama3.2-vision:11b
+ollama pull qwen3-vl:8b
 
-# Use it with an image
-ollama run llama3.2-vision:11b "What's in this image?" --image ./photo.jpg
+# Pass the image by putting its path in the prompt
+ollama run qwen3-vl:8b "What's in this image? ./photo.jpg"
 ```
+
+There's no `--image` flag - Ollama picks the path out of the prompt text.
 
 ### API usage with images
 ```python
@@ -505,12 +508,13 @@ def ask_about_image(image_path, question):
     
     response = requests.post('http://localhost:11434/api/generate',
         json={
-            'model': 'llama3.2-vision:11b',
+            'model': 'qwen3-vl:8b',
             'prompt': question,
-            'images': [base64_image]
+            'images': [base64_image],
+            'stream': False
         })
     
-    return response.json()
+    return response.json()['response']
 
 # Example usage
 result = ask_about_image("screenshot.png", "Describe what you see in this screenshot")
@@ -518,9 +522,10 @@ print(result)
 ```
 
 ### Practical vision model tips
-- **llama3.2-vision:11b** - Best balance of capability and resource usage
-- **llava:13b** - Alternative option, sometimes better at certain tasks
-- **llama3.2-vision:90b** - Most capable but needs serious hardware
+- **qwen3-vl:8b** - Best balance of capability and resource usage
+- **gemma4:12b** - Vision built into a strong general-purpose model
+- **minicpm-v4.5:8b** - Strong at images and video frames
+- **glm-ocr** / **deepseek-ocr** - Purpose-built for document text extraction
 
 These models can:
 - Describe images and photos
@@ -529,61 +534,58 @@ These models can:
 - Help with visual troubleshooting
 - Analyze documents and diagrams
 
-**Reality check:** Vision models need more resources than text-only models. Start with the 11B version unless you have plenty of RAM and GPU memory.
+**Reality check:** Vision models need more resources than text-only models. Start around 8B unless you have plenty of RAM and GPU memory.
 
-## Latest models with special features (August 2025)
+## Newer model capabilities
 
 ### Function calling and tool use
-Some newer models have built-in function calling capabilities:
+Most current models have built-in function calling. Look for the `tools` badge on the model's library page:
 
 ```bash
-# Models that support function calling
-ollama run gpt-oss            # OpenAI's open models with web browsing and Python tools
-ollama run phi-4:14b          # Microsoft's reasoning model with function support
-ollama run mistral-small-3.1  # Mistral's latest with tool calling
+ollama run gpt-oss:20b        # OpenAI's open-weight models
+ollama run qwen3.5:9b         # Multimodal, tools, and thinking
+ollama run granite4.1:8b      # IBM, strong at structured output
+ollama run lfm2.5:8b          # Built specifically for fast tool calling
 ```
 
 ### Configurable reasoning effort
-GPT-OSS allows you to control how much the model "thinks" before responding:
+Models that support thinking expose it through the `think` parameter, not a sampling option. gpt-oss accepts an effort level:
 
 ```python
 import requests
 
 def ask_with_reasoning(question, effort="medium"):
-    response = requests.post('http://localhost:11434/api/generate',
+    response = requests.post('http://localhost:11434/api/chat',
         json={
-            'model': 'gpt-oss',
-            'prompt': question,
-            'options': {
-                'reasoning_effort': effort  # low, medium, high
-            }
+            'model': 'gpt-oss:20b',
+            'messages': [{'role': 'user', 'content': question}],
+            'think': effort,   # low, medium, high
+            'stream': False
         })
-    return response.json()
+    return response.json()['message']['content']
 
 # Example usage
 quick_answer = ask_with_reasoning("What's 2+2?", "low")
 complex_answer = ask_with_reasoning("Solve this complex logic puzzle...", "high")
 ```
 
-### Bilingual coding models
-OpenCoder supports both English and Chinese for international development:
+For models that just toggle thinking on or off, pass `'think': True` or `False`. From the CLI, use `--think` and `--hidethinking`.
+
+### Multilingual coding
+The Qwen coding models handle prompts in many languages, which is handy on international teams:
 
 ```bash
-# English coding help
-ollama run opencoder:8b "Write a Python function to sort a list"
-
-# Chinese coding help  
-ollama run opencoder:8b "写一个Python函数来排序列表"
+ollama run qwen3-coder:30b "Write a Python function to sort a list"
+ollama run qwen3-coder:30b "写一个Python函数来排序列表"
 ```
 
 ### Advanced mathematical reasoning
-Athene-V2 excels at complex mathematical tasks:
+Reasoning models are the ones to reach for on proofs and hard math:
 
 ```bash
-ollama run athene-v2:72b "Prove that the square root of 2 is irrational"
+ollama run gpt-oss:20b "Prove that the square root of 2 is irrational"
 ```
 
 These newer models represent significant advances in local AI capabilities, bringing features that were previously only available in cloud services.
-- [ ] Document your API usage and parameters
 
 **Bottom line:** Ollama is surprisingly powerful once you dig into it. You can build some pretty sophisticated AI applications while keeping everything running on your own hardware. The learning curve isn't too steep, and the flexibility is worth it.

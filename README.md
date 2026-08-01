@@ -8,7 +8,7 @@ keywords: "local AI, run AI models locally, free ChatGPT alternative, Ollama, LM
 
 Tired of paying a monthly subscription for a chatbot? Yeah, me too. Here's how to run these AI models on your own machine - completely free and private. Learn to install and use local AI models like Qwen 3.5, Gemma 4, and gpt-oss with step-by-step instructions.
 
-📚 **Complete documentation available in the [docs folder](./docs/)**
+**Complete documentation available in the [docs folder](./docs/)**
 
 ## Benefits of Running AI Models Locally vs Cloud Services
 
@@ -78,8 +78,8 @@ I've tried a bunch of these local AI models. Here are the best free ChatGPT alte
 
 Honestly, just start with `qwen3.5:4b`. You can always download more later (and trust me, you will).
 
-**📋 [Detailed model breakdown →](docs/MODEL_GUIDE.md)**
-**🆕 [What I'm using right now →](docs/CURRENT_MODEL_RECOMMENDATIONS.md)**
+**[Detailed model breakdown](docs/MODEL_GUIDE.md)**
+**[What I'm using right now](docs/CURRENT_MODEL_RECOMMENDATIONS.md)**
 
 ## Step 4: How to Start Using Local AI Models
 
@@ -107,21 +107,22 @@ That's it. You're now running AI on your own machine. Pretty cool, right?
 
 ## Troubleshooting Common Local AI Installation Issues
 
-**🐌 Model running like molasses?** Try something smaller like `qwen3.5:2b` or `gemma3:1b`. Run `ollama ps` - if the `PROCESSOR` column says `100% CPU`, the model didn't fit in your GPU and that's your answer.
+**Model running like molasses?** Try something smaller like `qwen3.5:2b` or `gemma3:1b`. Run `ollama ps` - if the `PROCESSOR` column says `100% CPU`, the model didn't fit in your GPU and that's your answer.
 
-**💾 Computer says "out of memory"?** Your machine needs more RAM, or switch to a smaller model (try going from 9B to 4B). Shrinking the context window helps too: `/set parameter num_ctx 4096` inside `ollama run`.
+**Computer says "out of memory"?** Your machine needs more RAM, or switch to a smaller model (try going from 9B to 4B). Shrinking the context window helps too: `/set parameter num_ctx 4096` inside `ollama run`.
 
-**🤔 Model "thinks" forever before answering?** You grabbed a reasoning model. That's normal behavior for them - pick a non-thinking model if you just want quick answers.
+**Model "thinks" forever before answering?** You grabbed a reasoning model. That's normal behavior for them - pick a non-thinking model if you just want quick answers.
 
-**❌ Installation failing?** Restart your computer and check if your antivirus is being overly paranoid - sometimes it blocks AI software.
+**Installation failing?** Restart your computer and check if your antivirus is being overly paranoid - sometimes it blocks AI software.
 
 ## Additional Local AI Resources and Guides
 
-### 📚 Complete Documentation Index
+### Complete Documentation Index
 
 #### Getting Started
 - [**What Are AI Models?**](./docs/WHAT_ARE_AI_MODELS.md) - If you're curious how this magic works
 - [**Tool Comparison**](./docs/TOOL_COMPARISON.md) - Deep dive into your options
+- [**Ollama vs LM Studio**](./docs/Ollama_vs_LM_Studio.md) - Head-to-head on the two most popular tools
 
 #### Model Selection and Recommendations  
 - [**Model Guide**](./docs/MODEL_GUIDE.md) - Which models are actually good
@@ -131,13 +132,13 @@ That's it. You're now running AI on your own machine. Pretty cool, right?
 - [**File Formats Explained**](./docs/MODEL_FORMATS_AND_TYPES.md) - The technical stuff
 - [**Advanced Ollama Tricks**](./docs/ADVANCED_OLLAMA_FEATURES.md) - For when you want to get fancy
 
-### 🚀 Quick Navigation
+### Quick Navigation
 
-**New to AI?** → Start with [What Are AI Models?](./docs/WHAT_ARE_AI_MODELS.md)
+**New to AI?** Start with [What Are AI Models?](./docs/WHAT_ARE_AI_MODELS.md)
 
-**Need model recommendations?** → Check [Current Model Recommendations](./docs/CURRENT_MODEL_RECOMMENDATIONS.md)
+**Need model recommendations?** Check [Current Model Recommendations](./docs/CURRENT_MODEL_RECOMMENDATIONS.md)
 
-**Want advanced features?** → See [Advanced Ollama Features](./docs/ADVANCED_OLLAMA_FEATURES.md)
+**Want advanced features?** See [Advanced Ollama Features](./docs/ADVANCED_OLLAMA_FEATURES.md)
 
 ## Quick Help for Local AI Setup Issues
 

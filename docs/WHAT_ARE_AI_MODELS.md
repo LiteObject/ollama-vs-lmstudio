@@ -89,16 +89,16 @@ This is why most of us don't train our own models from scratch - it's like askin
 
 Good question! A few reasons:
 
-1. **🎁 Releasing weights is good strategy** 
+1. **Releasing weights is good strategy** 
    Meta, Google, Alibaba, IBM, Mistral, and even OpenAI now publish free models to build ecosystems and goodwill
 
-2. **🔬 Research benefits** 
+2. **Research benefits** 
    They want smart people to build cool things with their models
 
-3. **⚔️ Competitive pressure** 
+3. **Competitive pressure** 
    If a free model is 90% as good as a paid one, the paid one has to keep getting better
 
-4. **💰 The hard part's done** 
+4. **The hard part's done** 
    Training costs millions, but copying the finished model costs pennies
 
 It's like how pharmaceutical companies spend billions developing a drug, but generic versions are cheap once the patent expires.
@@ -134,19 +134,19 @@ It's like how pharmaceutical companies spend billions developing a drug, but gen
 ## Let's clear up some myths
 
 ### "AI models are conscious/sentient/alive"
-❌ **Nope** - They're incredibly sophisticated autocomplete, not digital brains
+**Nope** - They're incredibly sophisticated autocomplete, not digital brains
 
 ### "AI models know everything"
-❌ **Wrong** - They only know what was in their training data, which usually has a cutoff date
+**Wrong** - They only know what was in their training data, which usually has a cutoff date
 
 ### "AI models are always right"
-❌ **Definitely not** - They make mistakes, especially about recent events, math, or specific facts. When one confidently invents something, that's called a hallucination, and it happens more than you'd like
+**Definitely not** - They make mistakes, especially about recent events, math, or specific facts. When one confidently invents something, that's called a hallucination, and it happens more than you'd like
 
 ### "Bigger models are always better"
-❌ **Not really** - Bigger models are often smarter, but they're also slower and need beefier hardware. A well-trained 4B model from this year beats a 13B model from a few years ago
+**Not really** - Bigger models are often smarter, but they're also slower and need beefier hardware. A well-trained 4B model from this year beats a 13B model from a few years ago
 
 ### "Free models are open source"
-❌ **Usually not quite** - Most are "open weights." You get the model file, but not the training data or recipe, and licenses vary
+**Usually not quite** - Most are "open weights." You get the model file, but not the training data or recipe, and licenses vary
 
 ## Why bother running models locally?
 

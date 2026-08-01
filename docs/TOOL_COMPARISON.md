@@ -21,7 +21,7 @@ Both ship a desktop app now, so "GUI vs terminal" isn't really the deciding fact
 ### LM Studio
 **Who it's for:** People who want a nice interface without the tech hassle
 
-✅ **What's good about it:**
+**What's good about it:**
 - Actually looks nice and is easy to use
 - Download models by clicking buttons like a normal person
 - Chat interface is built right in
@@ -32,7 +32,7 @@ Both ship a desktop app now, so "GUI vs terminal" isn't really the deciding fact
 - Has an `lms` CLI and a headless server mode if you outgrow the GUI
 - Zero command line knowledge required
 
-❌ **The downsides:**
+**The downsides:**
 - Takes up more space on your computer
 - Uses a bit more resources while running
 - Not open source (free to use, including for work, but the app itself is proprietary)
@@ -40,7 +40,7 @@ Both ship a desktop app now, so "GUI vs terminal" isn't really the deciding fact
 ### Ollama
 **Who it's for:** Developers and anyone comfortable typing commands
 
-✅ **What's good about it:**
+**What's good about it:**
 - Fast and doesn't hog resources
 - Easy to integrate into your own projects - REST API plus an OpenAI-compatible endpoint
 - Now includes a desktop chat app for Windows, macOS, and Linux
@@ -49,7 +49,7 @@ Both ship a desktop app now, so "GUI vs terminal" isn't really the deciding fact
 - Great if you want to automate things or run it headless on a server
 - Open source (MIT)
 
-❌ **The downsides:**
+**The downsides:**
 - The CLI is still where most of the power lives
 - Fewer knobs in the GUI than LM Studio exposes
 - Bit of a learning curve if you're not technical
@@ -58,24 +58,24 @@ Both ship a desktop app now, so "GUI vs terminal" isn't really the deciding fact
 ### Jan
 **Who it's for:** People who want an open source desktop app
 
-✅ **What's good about it:**
+**What's good about it:**
 - Native app on Windows, Mac, and Linux - no Docker required
 - Open source, and can talk to local models *and* cloud providers in one place
 - Built-in model management
 
-❌ **The downsides:**
+**The downsides:**
 - Smaller ecosystem than LM Studio or Ollama
 - Fewer advanced tuning options
 
 ### Open WebUI
 **Who it's for:** People who want a ChatGPT-style web interface, often shared with a household or team
 
-✅ **What's good about it:**
+**What's good about it:**
 - Polished browser UI that sits on top of Ollama or any OpenAI-compatible server
 - Multi-user accounts, document chat (RAG), and conversation history
 - Open source and actively developed
 
-❌ **The downsides:**
+**The downsides:**
 - Usually run via Docker, which adds setup complexity
 - It's a front-end, not an inference engine - you still need Ollama or similar behind it
 

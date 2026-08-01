@@ -1,138 +1,106 @@
 ---
-title: "Best AI Models August 2025: Latest Local AI Recommendations"
-description: "Get the latest AI model recommendations for 2025 including Llama 3.3, DeepSeek R1, SmolLM2, and Granite3. Updated monthly with current best practices."
-keywords: "best AI models August 2025, Llama 3.3, DeepSeek R1, SmolLM2, latest AI models, AI model recommendations 2025"
+title: "Best Local AI Models July 2026: Current Recommendations"
+description: "Up-to-date local AI model recommendations including Qwen 3.5, Gemma 4, gpt-oss, Granite 4.1, and Qwen3-Coder. Refreshed as the Ollama library changes."
+keywords: "best AI models 2026, Qwen 3.5, Gemma 4, gpt-oss, Granite 4.1, Qwen3-Coder, latest local AI models"
 ---
 
-# Best AI Models August 2025: Current Recommendations for Local Installation
+# Best Local AI Models July 2026: Current Recommendations
 
 *Last updated after checking the latest Ollama library offerings*
 
-Discover the best AI models to install locally in 2025. Get current recommendations for Llama 3.3, DeepSeek R1, Qwen 2.5, and other top-performing models for different use cases.
+Discover the best AI models to install locally right now. Current recommendations across general chat, coding, reasoning, and vision - with the hardware you actually need for each.
 
-## 🚀 My current go-to models
+## My current go-to models
 
 ### If you're just getting started
-- **llama3.2:3b** - Still my #1 recommendation for beginners
-- **gpt-oss** - OpenAI's new open models - incredibly capable with reasoning and function calling
-- **smollm2:1.7b** - Microsoft's lightweight model that punches above its weight
-- **qwen3:1.7b** - New entry from Alibaba, very capable for its size
-- **phi3.5:3.8b** - Microsoft's solid alternative, reliable choice
+- **qwen3.5:4b** (~3.4GB) - My #1 recommendation for beginners. Handles text and images, 256K context
+- **gemma3:4b** (~3.3GB) - Google's small workhorse, very reliable
+- **granite4.1:3b** - IBM's small model, strong at instruction following and tool calling
+- **qwen3.5:2b** (~2.7GB) - When memory is really tight
 
-### For coding stuff
-- **deepcoder:14b** - New open-source coding champion, performs at o3-mini level
-- **opencoder:8b** - Bilingual coding model supporting English and Chinese
-- **starcoder2:7b** - Transparently trained open code model
-- **codestral** - Mistral's first dedicated code generation model
-- **codegemma** - Google's lightweight coding specialist
-- **stable-code:3b** - Efficient specialist that rivals larger models
-- **qwen3-coder:7b** - Latest coding model from the Qwen 3 family
-- **deepseek-coder-v2:16b** - Amazing if you've got the hardware to run it
-
-### For advanced reasoning and complex tasks
-- **gpt-oss** - OpenAI's open models with configurable reasoning effort
-- **phi-4:14b** - Microsoft's new reasoning powerhouse rivaling much larger models
-- **qwq:32b** - Reasoning-focused model, excellent for complex problems
-- **tulu3** - Allen Institute's leading instruction-following model
-- **deepseek-v3** - Massive 671B parameter model (37B active) - cutting edge
-- **olmo2:13b** - Competitive with Llama 3.1, great performance
+### For coding
+- **qwen3-coder:30b** - A mixture-of-experts model that punches way above the speed you'd expect from "30B". This is my daily driver if the hardware allows
+- **qwen3.5:9b** (~6.6GB) - The best all-rounder that still fits comfortably in 16GB
+- **devstral-small-2:24b** - Built specifically for agentic coding across multiple files
+- **qwen2.5-coder:7b** - Older, but still a solid pick on modest hardware
 
 ### If you've got a powerful machine
-- **athene-v2:72b** - Excellent for mathematics and technical tasks
-- **qwen3:32b** - Really impressive performance across the board
-- **llama3.1:70b** - Still a powerhouse for general tasks
-- **llama3.3:70b** - Meta's latest large model
-- **granite3.2** - IBM's updated models with 128K context
-- **mistral-small-3.1** - Great balance with vision capabilities
+- **gpt-oss:20b** - OpenAI's open-weight model. Great reasoning for its size
+- **gemma4:31b** (~20GB) - Google's current flagship for a single GPU. Vision, audio, tool calling
+- **qwen3.5:35b** (~24GB) - MoE with ~3B active parameters, so it's faster than the size suggests
+- **qwen3.6:27b** - Newest Qwen release, geared toward agentic coding
 
-### For vision and multimodal tasks
-- **mistral-small-3.1** - Latest with vision understanding and 128K context
-- **llama3.2-vision:11b** - Text + image understanding in one model
-- **llava:13b** - Excellent for visual Q&A and image description
+### Vision and specialist models
+- **qwen3-vl:8b** - Solid image understanding without a huge download
+- **minicpm-v4.5:8b** - Strong at images and video frames
+- **embeddinggemma:300m** / **nomic-embed-text** - Embeddings for search and RAG
 
-## 📊 What's still worth using vs what's getting old
+## What's still worth using vs what's getting old
 
-### ✅ Models that are still current and good
-- llama3.2:3b (my daily driver)
-- llama3.3:70b (Meta's newest, if you can run it)
-- phi3.5:3.8b (reliable and efficient)
-- qwen2.5 series (7b, 14b, 32b - all solid)
-- gemma2:9b, gemma2:27b (Google's offerings, very capable)
-- qwen2.5-coder:7b (still the best general coding model)
-- deepseek-coder-v2:16b (if you can run it)
-- deepseek-r1:7b (new reasoning model, really impressive)
-- mistral-nemo:12b (excellent quality)
-- granite3-dense:8b (IBM's improved version)
-- smollm2:1.7b (surprisingly good for its size)
+### Models that are current and good
+- qwen3.5 series (0.8b, 2b, 4b, 9b, 27b, 35b - multimodal, 256K context)
+- qwen3.6 (27b, 35b - newest Qwen, agentic coding focus)
+- gemma4 (e2b, e4b, 12b, 26b, 31b - vision, audio, tools)
+- gemma3 (1b, 4b, 12b, 27b - still a great default)
+- gpt-oss (20b, 120b - OpenAI's open-weight reasoning models)
+- granite4.1 (3b, 8b, 30b - Apache 2.0, enterprise friendly)
+- qwen3-coder (30b, 480b) and qwen3-coder-next
+- devstral-small-2:24b (agentic coding)
+- ministral-3 (3b, 8b, 14b - built for edge devices)
+- lfm2.5:8b (fast tool calling on consumer hardware)
+- nemotron-3-nano (4b, 30b)
+- olmo-3.1:32b (fully open training data, great for learning how this works)
 
-### 🔄 Models you should probably replace
-- **granite-code:8b** → Switch to **granite3-dense:8b** (newer version)
-- **codellama:7b** → Switch to **qwen2.5-coder:7b** or **starcoder2:7b**
-- **llama3.1:8b** → Consider **llama3.2:8b** or **llama3.3:70b** for improvements
+### Models you should probably replace
+- **llama3.2:3b** → **qwen3.5:4b** or **gemma3:4b** (Llama 3.2 is nearly two years old now)
+- **llama3.1:8b** / **llama3.3:70b** → **qwen3.5:9b** or **gpt-oss:20b**
+- **qwen2.5:7b** → **qwen3.5:9b**
+- **phi3.5:3.8b** → **phi4-mini:3.8b**, or just move to **qwen3.5:4b**
+- **granite-code** / **granite3-dense** → **granite4.1**
+- **codellama:7b** → **qwen3-coder:30b** or **qwen2.5-coder:7b**
+- **gemma2:9b** → **gemma3:12b** or **gemma4:12b**
+- **deepseek-r1:7b** → still fine, but **gpt-oss:20b** or **qwen3.5** with thinking enabled is better if it fits
 
-### 🆕 What's new in August 2025?
+### Things worth knowing about (2026)
+- **Mixture-of-experts (MoE) models are everywhere now.** Tags like `35b-a3b` mean 35B total parameters but only ~3B active per token. You still need memory for the full 35B, but the speed feels like a much smaller model
+- **Thinking/reasoning modes are built in.** Many models now toggle a reasoning mode instead of shipping a separate "reasoning model"
+- **Multimodal is the default.** Qwen 3.5 and Gemma 4 handle images out of the box; Gemma 4 also does audio
+- **New quantization formats** - you'll see `mxfp4`, `nvfp4`, `int4`, and QAT tags alongside the familiar `q4_K_M`. QAT versions are quantization-aware trained, so they hold up better at small sizes
+- **Cloud-tagged models** run on Ollama's servers, not yours. Convenient, but not private and not offline
 
-The AI world moves fast! Here's what just dropped:
+## Just tell me what to download
 
-- **GPT-OSS** - OpenAI released their first open-weight models with incredible reasoning capabilities, function calling, and configurable thinking effort. Already 84.1K pulls in just 5 hours!
-- **Phi-4** - Microsoft's new 14B reasoning model that rivals much larger models in complex reasoning tasks
-- **DeepCoder** - A fully open-source 14B coding model performing at the level of o3-mini
-- **Mistral Small 3.1** - Adds state-of-the-art vision understanding to Mistral's capabilities
-- **Tülu 3** - Allen Institute's leading instruction-following model family
-- **Qwen 3 family** - Alibaba's massive update with models from 0.6B to 235B parameters, including MoE variants
-- **Athene-V2** - 72B parameter model excelling in mathematics and technical tasks
-- **Granite 3.2** - IBM's updated models with 128K context and improved reasoning
-- **OpenCoder** - Bilingual coding model supporting both English and Chinese
-- **Command R7B** - Cohere's model with advanced Arabic language capabilities
-- **Dolphin** - Uncensored instruct-tuned models for flexible applications
-- **StarCoder2** - Updated transparently trained open code models
-- **CodeGemma** - Google's lightweight coding specialist
-- **Bespoke-Minicheck** - Factuality checking model to detect hallucinations
+**Want to try AI for the first time?**
+→ `ollama run qwen3.5:4b`
 
-## 💡 My honest take on what to actually use
+**Need help with programming?**
+→ `ollama run qwen3-coder:30b` (or `qwen2.5-coder:7b` on lighter hardware)
 
-I've been testing these models for weeks. Here's what I'm actually running:
+**Work in multiple languages?**
+→ `ollama run qwen3.5:9b`
 
-**For most people**: Still start with `llama3.2:3b` for reliability, but if you want to try the cutting edge, `gpt-oss` is genuinely impressive for an open model.
+**Got a beast machine and want the best?**
+→ `ollama run gpt-oss:120b` or `ollama run qwen3.5:122b`
 
-**For coding**: `deepcoder:14b` has blown me away - it's performing at o3-mini level for coding tasks. If that's too big, `stable-code:3b` remains excellent.
+**Want something balanced and reliable?**
+→ `ollama run gemma4:12b`
 
-**For reasoning**: `phi-4:14b` and `gpt-oss` are both genuinely good at thinking through complex problems. The configurable reasoning effort in GPT-OSS is particularly cool.
+**Need lightweight but capable?**
+→ `ollama run qwen3.5:2b` or `ollama run granite4.1:3b`
 
-**For vision tasks**: `mistral-small-3.1` now has vision capabilities alongside its text skills, making it a great all-in-one option.
+**Want the latest reasoning capabilities?**
+→ `ollama run gpt-oss:20b`
 
-**For power users**: `athene-v2:72b` is incredible for mathematical and technical work if you have the hardware to run it.
+**Need it to look at images?**
+→ `ollama run qwen3-vl:8b`
 
-## 🎯 Just tell me what to download
+## Some practical advice
 
-**🆕 Want to try AI for the first time?**
-→ `ollama run llama3.2:3b`
-
-**💻 Need help with programming?**
-→ `ollama run qwen2.5-coder:7b`
-
-**🌍 Work in multiple languages?**
-→ `ollama run qwen2.5:7b`
-
-**🔥 Got a beast machine and want the best?**
-→ `ollama run llama3.3:70b` or `ollama run deepseek-r1:32b`
-
-**⚖️ Want something balanced and reliable?**
-→ `ollama run mistral-nemo:12b`
-
-**🪶 Need lightweight but capable?**
-→ `ollama run smollm2:1.7b`
-
-**🧠 Want the latest reasoning capabilities?**
-→ `ollama run deepseek-r1:7b`
-
-## 💡 Some practical advice
-
-1. **Don't start with the biggest model** - Begin with 3B-7B, upgrade later if needed
-2. **Try the new reasoning models** - deepseek-r1 series is genuinely impressive for complex problems
-3. **Watch your resources** - Keep an eye on RAM/VRAM usage, especially at first
-4. **Use specialized models** - Coding models really are better at coding, reasoning models excel at complex problems
-5. **Check back regularly** - New models drop frequently, and some are genuinely better
+1. **Don't start with the biggest model** - Begin with 3B-9B, upgrade later if needed
+2. **Check the download size, not the parameter count** - An MoE model tagged `35b-a3b` is fast, but it still needs ~24GB of memory
+3. **Watch your resources** - `ollama ps` tells you whether a model landed on the GPU or fell back to CPU
+4. **Use specialized models** - Coding models really are better at coding, and reasoning models are worth the extra wait on hard problems
+5. **Check back regularly** - New models drop constantly, and some are genuinely better
 
 ---
-*I try to keep this updated as I test new models and see what's actually working well in practice. Last checked: August 2025*
+*I try to keep this updated as I test new models and see what's actually working well in practice. Last checked: July 2026*
