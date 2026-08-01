@@ -100,6 +100,10 @@ Think of model size like engine displacement in cars - bigger usually means more
 
 You'll see tags like `qwen3.5:35b-a3b` or `gemma4:26b-a4b`. That means 35B total parameters with only ~3B *active* for any given token. Practical translation: **it needs memory like a big model but runs at the speed of a small one.** Great deal if you have the RAM.
 
+### Will it actually fit on your machine?
+
+Parameter count is a rough proxy; what decides whether a model runs *well* is whether its download fits in your GPU's VRAM. The [hardware section in the README](../README.md#step-2-check-your-computer-hardware-requirements-for-ai-models) has a per-GPU sizing table, an explanation of what happens when a model only partly fits, and which GPUs are supported.
+
 ## How to actually choose
 
 1. **Just start with qwen3.5:4b** - seriously, stop overthinking it

@@ -47,21 +47,62 @@ Ollama also has a desktop app for Windows, macOS, and Linux now, so you get a ch
 
 ## Step 2: Check Your Computer Hardware Requirements for AI Models
 
-This is important - you can't run huge models on a slow computer. But don't worry, there are good options for everyone:
+This is important - you can't run huge models on a slow computer. But don't worry, there are good options for everyone.
 
-| What you've got | What you can run | How good is it? |
-|-----------------|------------------|-----------------|
-| Basic laptop (8GB RAM) | 1B-4B models | Pretty decent for most stuff |
-| Solid laptop/desktop (16GB RAM) | 8B-14B models | Genuinely useful |
-| Gaming rig (12-16GB VRAM) | 24B-32B models, or MoE models | Really good, honestly |
-| Beast machine (32GB+ VRAM or 64GB+ unified) | 70B+ and large MoE models | Scary good |
+### VRAM is what matters, not RAM
 
-Rule of thumb: **the download size is roughly how much memory the model needs**, plus a couple of GB for context. A 6.6GB model on an 8GB machine will technically load and then crawl.
+This trips up almost everyone, so let's be blunt about it:
+
+- **If the whole model fits in your GPU's VRAM**, it's fast - dozens of words per second.
+- **If it doesn't**, the leftover layers run on your CPU out of system RAM, which is typically 5-20x slower. It still works, it's just painful.
+- **Apple Silicon is the exception.** RAM and VRAM are one shared pool, though macOS reserves some for the system - budget for roughly 70% of your total.
+
+So "do I have 32GB of RAM?" is a much less useful question than "do I have 12GB of VRAM?"
+
+### What actually fits
+
+Sizes below are for the default Q4_K_M quantization - what you get when you don't specify a tag.
+
+| Your VRAM (or unified memory) | Look for downloads up to | Example that fits |
+|---|---|---|
+| No GPU, 8GB system RAM | ~4GB | `qwen3.5:4b` (3.4GB) or `granite4.1:3b` (2.1GB) |
+| 8GB | ~6GB | `granite4.1:8b` (5.3GB) |
+| 12GB | ~10GB | `gemma4:12b` (7.6GB) or `qwen3.5:9b` (6.6GB) |
+| 16GB | ~14GB | `gpt-oss:20b` (14GB) |
+| 24GB | ~21GB | `qwen3.5:27b` (17GB) or `granite4.1:30b` (17GB) |
+| 32GB+ VRAM, or 64GB+ unified | ~29GB and up | `qwen3.5:35b` (24GB) |
+
+Rule of thumb: **the download size is roughly the memory the model needs**, plus overhead for context. At the default 4K context that overhead is small; at 32K and beyond it can add several GB, so leave headroom.
+
+### When it doesn't fit
+
+Ollama runs the model anyway, splitting it between GPU and CPU. Check what actually happened:
+
+```bash
+ollama ps
+```
+
+The `PROCESSOR` column tells you everything:
+- `100% GPU` - ideal, full speed
+- `48%/52% CPU/GPU` - partial offload, noticeably slower but usable
+- `100% CPU` - no GPU acceleration at all, expect a crawl
+
+Stuck on partial offload? Drop a size (9B to 4B), shrink the context (`OLLAMA_CONTEXT_LENGTH=4096`), or shrink the KV cache (`OLLAMA_KV_CACHE_TYPE=q8_0`).
+
+### Will my GPU even work?
+
+- **NVIDIA** - Compute capability 5.0+ and driver 550 or newer. That's GTX 750 Ti and up, so most cards from the last decade. Compute capability 5.0-6.2 needs driver 570+. [Check your card](https://developer.nvidia.com/cuda-gpus)
+- **Apple Silicon** - Every M-series chip works via Metal, no setup required
+- **AMD on Linux** - Needs the ROCm v7 driver. RX 9000 and 7000 series, RX 6800 and above, Radeon PRO W6000/W7000, Ryzen AI, and Instinct cards
+- **AMD on Windows** - Shorter list: RX 7900 XTX/XT/GRE, 7800 XT, 7700 XT, 7600 and 7600 XT, plus PRO W7000 series
+- **Intel and others** - Covered by Vulkan on Windows and Linux, enabled by default
+
+No supported GPU? Everything still runs on CPU - just stay at 4B and under.
 
 **Not sure what you have?** 
-- Windows: Right-click "This PC" → Properties
+- Windows: Right-click "This PC" → Properties for RAM; Task Manager → Performance → GPU for VRAM
 - Mac: Apple Menu → About This Mac
-- Linux: You probably already know, but `lscpu` and `free -h` if you don't
+- Linux: `lscpu` and `free -h`, plus `nvidia-smi` or `rocminfo` for the GPU
 
 ## Step 3: Download and Install Your First AI Model
 
